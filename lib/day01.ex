@@ -1,18 +1,36 @@
 defmodule Day01 do
-  @moduledoc """
-  Documentation for Day01.
-  """
+  def start do
+    get_input()
+    |> copy_first_to_last()
+    |> String.graphemes()
+    |> Enum.map(&String.to_integer/1)    
+    |> process([])
 
-  @doc """
-  Hello world.
+  end
 
-  ## Examples
+  defp get_input do
+    "../assets/input.txt"
+    |> Path.expand(__DIR__)
+    |> File.read!    
+  end
 
-      iex> Day01.hello
-      :world
+  defp copy_first_to_last(input) do
+    first = String.first(input)
+    input <> first
+  end
 
-  """
-  def hello do
-    :world
+  defp process(input_list, output_list) when length(input_list) == 1 do
+    Enum.reduce(output_list, fn(elem, acc) -> elem + acc end)
+  end
+
+  defp process(input_list, output_list) do
+    [first | rest] = input_list
+    [second | _ ] = rest
+
+    if first == second do
+      process(rest, [first | output_list])
+    else
+      process(rest, output_list)
+    end
   end
 end
